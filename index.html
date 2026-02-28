@@ -241,12 +241,12 @@
     let citas = JSON.parse(localStorage.getItem('citas_vet')) || [];
     const modalBootstrap = new bootstrap.Modal(document.getElementById('modalCita'));
 
-    // 🔒 BLOQUEAR FECHAS PASADAS
+    //  BLOQUEAR FECHAS PASADAS
     const inputFecha = document.getElementById('fecha');
     const hoy = new Date().toISOString().split('T')[0];
     inputFecha.setAttribute('min', hoy);
 
-    // 🔒 BLOQUEAR DOMINGOS AL CAMBIAR FECHA
+    //  BLOQUEAR DOMINGOS AL CAMBIAR FECHA
     inputFecha.addEventListener('change', function () {
         const dia = new Date(this.value + 'T00:00:00').getDay();
         if (dia === 0) {
@@ -283,7 +283,7 @@
         const fechaSeleccionada = document.getElementById('fecha').value;
         const dia = new Date(fechaSeleccionada + 'T00:00:00').getDay();
 
-        // 🔒 VALIDAR DOMINGO AL GUARDAR
+        //  VALIDAR DOMINGO AL GUARDAR
         if (dia === 0) {
             Swal.fire({
                 icon: 'error',
@@ -296,7 +296,7 @@
         const horaSeleccionada = document.getElementById('hora').value;
         const [hora, minutos] = horaSeleccionada.split(':').map(Number);
 
-        // 🔒 VALIDAR HORARIO
+        //  VALIDAR HORARIO
         if (hora < 8 || hora > 20 || (hora === 20 && minutos > 0)) {
             Swal.fire({
                 icon: 'error',
@@ -394,5 +394,6 @@
 </script>
 
 </body>
+
 
 </html>
