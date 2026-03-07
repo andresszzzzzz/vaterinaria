@@ -159,6 +159,7 @@
         <div id="contenedorCitas" class="row"></div>
     </div>
 
+
     <div class="modal fade" id="modalCita" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -287,15 +288,68 @@ document.getElementById('formCita').addEventListener('submit', function (e) {
     const tipo = document.getElementById('tipoMascota').value;
     const sintomas = document.getElementById('sintomas').value.trim();
 
-    if (!mascota || !propietario || !telefono || !fecha || !horaInput || !tipo || !sintomas) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Campos incompletos',
-            text: 'Por favor completa todos los campos antes de continuar',
-            confirmButtonColor: '#ff0000'
-        });
-        return;
-    }
+if (!mascota) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes escribir el nombre de la mascota'
+    });
+    return;
+}
+
+if (!propietario) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes escribir el nombre del dueño'
+    });
+    return;
+}
+
+if (!telefono) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes escribir el número de teléfono'
+    });
+    return;
+}
+
+if (!fecha) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes seleccionar una fecha'
+    });
+    return;
+}
+
+if (!horaInput) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes seleccionar una hora'
+    });
+    return;
+}
+
+if (!tipo) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes seleccionar el tipo de mascota'
+    });
+    return;
+}
+
+if (!sintomas) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Falta información',
+        text: 'Debes escribir los síntomas'
+    });
+    return;
+}
 
         const fechaSeleccionada = document.getElementById('fecha').value;
         const dia = new Date(fechaSeleccionada + 'T00:00:00').getDay();
