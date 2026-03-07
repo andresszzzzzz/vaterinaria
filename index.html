@@ -167,7 +167,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form id="formCita">
+                   <form id="formCita" novalidate>
                         <input type="hidden" id="editId">
                         <input type="text" id="nombreMascota" class="form-control mb-3"
                             placeholder="Nombre de la mascota" required>
@@ -276,9 +276,26 @@
         }
         modalBootstrap.show();
     }
+document.getElementById('formCita').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-    document.getElementById('formCita').addEventListener('submit', function (e) {
-        e.preventDefault();
+    const mascota = document.getElementById('nombreMascota').value.trim();
+    const propietario = document.getElementById('propietario').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const fecha = document.getElementById('fecha').value;
+    const horaInput = document.getElementById('hora').value;
+    const tipo = document.getElementById('tipoMascota').value;
+    const sintomas = document.getElementById('sintomas').value.trim();
+
+    if (!mascota || !propietario || !telefono || !fecha || !horaInput || !tipo || !sintomas) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Por favor completa todos los campos antes de continuar',
+            confirmButtonColor: '#ff0000'
+        });
+        return;
+    }
 
         const fechaSeleccionada = document.getElementById('fecha').value;
         const dia = new Date(fechaSeleccionada + 'T00:00:00').getDay();
@@ -397,4 +414,3 @@
 
 
 </html>
-
