@@ -168,7 +168,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                   <form id="formCita" novalidate>
+                    <form id="formCita" novalidate>
                         <input type="hidden" id="editId">
                         <input type="text" id="nombreMascota" class="form-control mb-3"
                             placeholder="Nombre de la mascota" required>
@@ -221,212 +221,220 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-   <script>
-    // Lógica de GIFs
-    const gifsMascotas = {
-        "Perro": "https://www.gifss.com/animales/perros/images/perro-animado-12.gif",
-        "Gato": "https://http2.mlstatic.com/D_NQ_NP_949345-CBT83443420984_042025-O.webp7",
-        "Loro": "https://usagif.com/wp-content/uploads/2020/b72nv6/partyparrt-9.gif",
-        "Conejo":"https://media.tenor.com/woAPbK0qj5gAAAAM/%E0%B8%AD%E0%B8%B4%E0%B8%AD%E0%B8%B4-snowball.gif",
-        "Hamster":"https://www.gifsanimados.org/data/media/517/hamster-imagen-animada-0131.gif",
-        "Tortuga":"https://media.tenor.com/Ocbnn2GxVDgAAAAM/turtle-cute.gif",
-        "Iguana":"https://media.tenor.com/ImJrgYCFUkcAAAAM/cryptid-folklore.gif",
-        "Serpiente":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVRP21wZMT0HHW-q5qzEYRaxF2SD7E_MZN_g&s",
-        "Pez":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRuWO3LfXoNNBYZtOANec_57C3X4BImWTh2A&s",
-        "Caballo":"https://img1.picmix.com/output/stamp/normal/4/8/9/9/529984_506ce.gif",
-        "Hurón":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbgIpLRX_p_v3qmYzvus6AkrlcsxYnmjukeA&s",
-        "Cerdo":"https://media.tenor.com/AXl4_5OBDDwAAAAM/pig.gif",
-        "Gallina":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYTZjnDzGShvU8tF2byF7ZgQblmjnpwDuYRw&s",
-    };
-
-    let citas = JSON.parse(localStorage.getItem('citas_vet')) || [];
-    const modalBootstrap = new bootstrap.Modal(document.getElementById('modalCita'));
-
-    //  BLOQUEAR FECHAS PASADAS
-    const inputFecha = document.getElementById('fecha');
-    const hoy = new Date().toISOString().split('T')[0];
-    inputFecha.setAttribute('min', hoy);
-
-    //  BLOQUEAR DOMINGOS AL CAMBIAR FECHA
-    inputFecha.addEventListener('change', function () {
-        const dia = new Date(this.value + 'T00:00:00').getDay();
-        if (dia === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Domingos cerrados',
-                text: 'La veterinaria no atiende los domingos'
-            });
-            this.value = '';
-        }
-    });
-
-    function abrirModal(id = null) {
-        document.getElementById('formCita').reset();
-        document.getElementById('editId').value = id || '';
-        document.getElementById('tituloModal').innerText = id ? 'EDITAR CITA' : 'NUEVA CITA';
-
-        if (id) {
-            const c = citas.find(cita => cita.id == id);
-            document.getElementById('nombreMascota').value = c.mascota;
-            document.getElementById('propietario').value = c.propietario;
-            document.getElementById('telefono').value = c.telefono;
-            document.getElementById('fecha').value = c.fecha;
-            document.getElementById('hora').value = c.hora;
-            document.getElementById('tipoMascota').value = c.tipo;
-            document.getElementById('sintomas').value = c.sintomas;
-        }
-        modalBootstrap.show();
-    }
-document.getElementById('formCita').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const mascota = document.getElementById('nombreMascota').value.trim();
-    const propietario = document.getElementById('propietario').value.trim();
-    const telefono = document.getElementById('telefono').value.trim();
-    const fecha = document.getElementById('fecha').value;
-    const horaInput = document.getElementById('hora').value;
-    const tipo = document.getElementById('tipoMascota').value;
-    const sintomas = document.getElementById('sintomas').value.trim();
-
-if (!mascota) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes escribir el nombre de la mascota'
-    });
-    return;
-}
-
-if (!propietario) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes escribir el nombre del dueño'
-    });
-    return;
-}
-
-if (!telefono) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes escribir el número de teléfono'
-    });
-    return;
-}
-
-if (!fecha) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes seleccionar una fecha'
-    });
-    return;
-}
-
-if (!horaInput) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes seleccionar una hora'
-    });
-    return;
-}
-
-if (!tipo) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes seleccionar el tipo de mascota'
-    });
-    return;
-}
-
-if (!sintomas) {
-    Swal.fire({
-        icon: 'warning',
-        title: 'Falta información',
-        text: 'Debes escribir los síntomas'
-    });
-    return;
-}
-
-        const fechaSeleccionada = document.getElementById('fecha').value;
-        const dia = new Date(fechaSeleccionada + 'T00:00:00').getDay();
-
-        //  VALIDAR DOMINGO AL GUARDAR
-        if (dia === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Día no disponible',
-                text: 'La veterinaria no atiende los domingos'
-            });
-            return;
-        }
-
-        const horaSeleccionada = document.getElementById('hora').value;
-        const [hora, minutos] = horaSeleccionada.split(':').map(Number);
-
-        //  VALIDAR HORARIO
-        if (hora < 8 || hora > 20 || (hora === 20 && minutos > 0)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Horario no permitido',
-                text: 'Solo se pueden agendar citas entre 8:00 AM y 8:00 PM'
-            });
-            return;
-        }
-
-        const idEdit = document.getElementById('editId').value;
-
-        const datos = {
-            mascota: document.getElementById('nombreMascota').value,
-            propietario: document.getElementById('propietario').value,
-            telefono: document.getElementById('telefono').value,
-            fecha: fechaSeleccionada,
-            hora: horaSeleccionada,
-            tipo: document.getElementById('tipoMascota').value,
-            sintomas: document.getElementById('sintomas').value,
-            estado: 'Abierta'
+    <script>
+        // Lógica de GIFs
+        const gifsMascotas = {
+            "Perro": "https://www.gifss.com/animales/perros/images/perro-animado-12.gif",
+            "Gato": "https://http2.mlstatic.com/D_NQ_NP_949345-CBT83443420984_042025-O.webp7",
+            "Loro": "https://usagif.com/wp-content/uploads/2020/b72nv6/partyparrt-9.gif",
+            "Conejo": "https://media.tenor.com/woAPbK0qj5gAAAAM/%E0%B8%AD%E0%B8%B4%E0%B8%AD%E0%B8%B4-snowball.gif",
+            "Hamster": "https://www.gifsanimados.org/data/media/517/hamster-imagen-animada-0131.gif",
+            "Tortuga": "https://media.tenor.com/Ocbnn2GxVDgAAAAM/turtle-cute.gif",
+            "Iguana": "https://media.tenor.com/ImJrgYCFUkcAAAAM/cryptid-folklore.gif",
+            "Serpiente": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVRP21wZMT0HHW-q5qzEYRaxF2SD7E_MZN_g&s",
+            "Pez": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRuWO3LfXoNNBYZtOANec_57C3X4BImWTh2A&s",
+            "Caballo": "https://img1.picmix.com/output/stamp/normal/4/8/9/9/529984_506ce.gif",
+            "Hurón": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbgIpLRX_p_v3qmYzvus6AkrlcsxYnmjukeA&s",
+            "Cerdo": "https://media.tenor.com/AXl4_5OBDDwAAAAM/pig.gif",
+            "Gallina": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYTZjnDzGShvU8tF2byF7ZgQblmjnpwDuYRw&s",
         };
 
-        if (idEdit) {
-            citas = citas.map(c => c.id == idEdit ? { ...datos, id: parseInt(idEdit), estado: c.estado } : c);
-        } else {
-            datos.id = Date.now();
-            citas.push(datos);
+        let citas = JSON.parse(localStorage.getItem('citas_vet')) || [];
+        const modalBootstrap = new bootstrap.Modal(document.getElementById('modalCita'));
+
+        //  BLOQUEAR FECHAS PASADAS
+        const inputFecha = document.getElementById('fecha');
+        const hoy = new Date().toISOString().split('T')[0];
+        inputFecha.setAttribute('min', hoy);
+
+        //  BLOQUEAR DOMINGOS AL CAMBIAR FECHA
+        inputFecha.addEventListener('change', function () {
+            const dia = new Date(this.value + 'T00:00:00').getDay();
+            if (dia === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Domingos cerrados',
+                    text: 'La veterinaria no atiende los domingos'
+                });
+                this.value = '';
+            }
+        });
+
+        function abrirModal(id = null) {
+            document.getElementById('formCita').reset();
+            document.getElementById('editId').value = id || '';
+            document.getElementById('tituloModal').innerText = id ? 'EDITAR CITA' : 'NUEVA CITA';
+
+            if (id) {
+                const c = citas.find(cita => cita.id == id);
+                document.getElementById('nombreMascota').value = c.mascota;
+                document.getElementById('propietario').value = c.propietario;
+                document.getElementById('telefono').value = c.telefono;
+                document.getElementById('fecha').value = c.fecha;
+                document.getElementById('hora').value = c.hora;
+                document.getElementById('tipoMascota').value = c.tipo;
+                document.getElementById('sintomas').value = c.sintomas;
+            }
+            modalBootstrap.show();
         }
+        document.getElementById('formCita').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-        localStorage.setItem('citas_vet', JSON.stringify(citas));
-        renderizarCitas();
-        modalBootstrap.hide();
-    });
+            const mascota = document.getElementById('nombreMascota').value.trim();
+            const propietario = document.getElementById('propietario').value.trim();
+            const telefono = document.getElementById('telefono').value.trim();
+            const fecha = document.getElementById('fecha').value;
+            const horaInput = document.getElementById('hora').value;
+            const tipo = document.getElementById('tipoMascota').value;
+            const sintomas = document.getElementById('sintomas').value.trim();
 
-    function renderizarCitas() {
-        const contenedor = document.getElementById('contenedorCitas');
-        contenedor.innerHTML = '';
-        const filtro = document.getElementById('filtroEstado').value;
-        const filtradas = citas.filter(c => c.estado === filtro);
+            if (!mascota) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes escribir el nombre de la mascota'
+                });
+                return;
+            }
 
-        filtradas.forEach(c => {
-            let botones = '';
+            if (!propietario) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes escribir el nombre del dueño'
+                });
+                return;
+            }
 
-            if (c.estado === 'Abierta') {
-                botones = `
+            if (!telefono) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes escribir el número de teléfono'
+                });
+                return;
+            }
+
+            if (!fecha) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes seleccionar una fecha'
+                });
+                return;
+            }
+
+            if (!horaInput) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes seleccionar una hora'
+                });
+                return;
+            }
+
+            if (!tipo) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes seleccionar el tipo de mascota'
+                });
+                return;
+            }
+
+            if (!sintomas) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Falta información',
+                    text: 'Debes escribir los síntomas'
+                });
+                return;
+            }
+
+            const fechaSeleccionada = document.getElementById('fecha').value;
+            const dia = new Date(fechaSeleccionada + 'T00:00:00').getDay();
+
+            //  VALIDAR DOMINGO AL GUARDAR
+            if (dia === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Día no disponible',
+                    text: 'La veterinaria no atiende los domingos'
+                });
+                return;
+            }
+
+            const horaSeleccionada = document.getElementById('hora').value;
+            const [hora, minutos] = horaSeleccionada.split(':').map(Number);
+
+            //  VALIDAR HORARIO
+            if (hora < 8 || hora > 20 || (hora === 20 && minutos > 0)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Horario no permitido',
+                    text: 'Solo se pueden agendar citas entre 8:00 AM y 8:00 PM'
+                });
+                return;
+            }
+
+            const idEdit = document.getElementById('editId').value;
+
+            const datos = {
+                mascota: document.getElementById('nombreMascota').value,
+                propietario: document.getElementById('propietario').value,
+                telefono: document.getElementById('telefono').value,
+                fecha: fechaSeleccionada,
+                hora: horaSeleccionada,
+                tipo: document.getElementById('tipoMascota').value,
+                sintomas: document.getElementById('sintomas').value,
+                estado: 'Abierta'
+            };
+
+            if (idEdit) {
+                citas = citas.map(c => c.id == idEdit ? { ...datos, id: parseInt(idEdit), estado: c.estado } : c);
+            } else {
+                datos.id = Date.now();
+                citas.push(datos);
+            }
+
+            localStorage.setItem('citas_vet', JSON.stringify(citas));
+            renderizarCitas();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Cita guardada',
+                text: 'La cita se registró correctamente',
+                confirmButtonColor: '#ff0000'
+            });
+
+            modalBootstrap.hide();
+        });
+
+        function renderizarCitas() {
+            const contenedor = document.getElementById('contenedorCitas');
+            contenedor.innerHTML = '';
+            const filtro = document.getElementById('filtroEstado').value;
+            const filtradas = citas.filter(c => c.estado === filtro);
+
+            filtradas.forEach(c => {
+                let botones = '';
+
+                if (c.estado === 'Abierta') {
+                    botones = `
                 <button onclick="cambiarEstado(${c.id},'Terminada')" class="btn-action btn-finalizar w-100 mb-2">FINALIZAR</button>
                 <div class="d-flex gap-2">
                     <button onclick="abrirModal(${c.id})" class="btn-action btn-editar flex-fill">EDITAR</button>
                     <button onclick="cambiarEstado(${c.id},'Anulada')" class="btn-action btn-anular flex-fill">ANULAR</button>
                 </div>`;
-            } else if (c.estado === 'Terminada') {
-                botones = `
+                } else if (c.estado === 'Terminada') {
+                    botones = `
                 <button onclick="cambiarEstado(${c.id},'Abierta')" class="btn-action btn-abrir w-100 mb-2">ABRIR CITA</button>
                 <button onclick="borrarCita(${c.id})" class="btn-action btn-anular w-100">ELIMINAR</button>`;
-            } else {
-                botones = `<button onclick="borrarCita(${c.id})" class="btn-action btn-anular w-100">BORRAR DEFINITIVO</button>`;
-            }
+                } else {
+                    botones = `<button onclick="borrarCita(${c.id})" class="btn-action btn-anular w-100">BORRAR DEFINITIVO</button>`;
+                }
 
-            contenedor.innerHTML += `
+                contenedor.innerHTML += `
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card card-cita p-3 h-100">
                 <div class="d-flex justify-content-between mb-3">
@@ -446,23 +454,23 @@ if (!sintomas) {
                 </div>
             </div>
         </div>`;
-        });
-    }
+            });
+        }
 
-    function cambiarEstado(id, nuevo) {
-        citas = citas.map(c => c.id === id ? { ...c, estado: nuevo } : c);
-        localStorage.setItem('citas_vet', JSON.stringify(citas));
+        function cambiarEstado(id, nuevo) {
+            citas = citas.map(c => c.id === id ? { ...c, estado: nuevo } : c);
+            localStorage.setItem('citas_vet', JSON.stringify(citas));
+            renderizarCitas();
+        }
+
+        function borrarCita(id) {
+            citas = citas.filter(c => c.id !== id);
+            localStorage.setItem('citas_vet', JSON.stringify(citas));
+            renderizarCitas();
+        }
+
         renderizarCitas();
-    }
-
-    function borrarCita(id) {
-        citas = citas.filter(c => c.id !== id);
-        localStorage.setItem('citas_vet', JSON.stringify(citas));
-        renderizarCitas();
-    }
-
-    renderizarCitas();
-</script>
+    </script>
 
 </body>
 
